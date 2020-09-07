@@ -1,0 +1,41 @@
+---
+# These tasks install http and php modules
+- name: Download Epele repository
+  get_url:
+    url: http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+    dest: /tmp
+
+- name: Install epel repository for centos 6
+  yum:
+    name: /tmp/epel-release-6-8.noarch.rpm
+    state: present
+
+- name: Installing app required packages
+  yum:
+    name: [
+      'httpd', 
+      'php', 
+      'php-mysql', 
+      'git', 
+      'libsemanage-python', 
+      'libselinux-python', 
+      'php-mcrypt', 
+      'php-curl', 
+      'php-xml', 
+      'php-pecl-memcached'
+    ]
+    state: present
+    update_cache: yes
+
+- name: Enable httpd service
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+
+- name: Configure SELinux to allow httpd to connect to remote database
+  seboolean: 
+    name: httpd_can_network_connect_db
+    state: true
+    persistent: yes
+  when: sestatus.rc != 0

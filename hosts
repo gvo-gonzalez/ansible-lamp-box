@@ -1,0 +1,5 @@
+[webappservers]
+wwwappsrv       ansible_host=127.0.0.1 ansible_port=2222 
+
+[dbservers]
+webdb           ansible_host=127.0.0.1 ansible_port=2222 

@@ -1,0 +1,66 @@
+---
+# This playbook contains common plays that will be run on all nodes
+- name: clean up yum cache service
+  shell: "{{ item }}"
+  with_items:
+    - yum clean all			
+    - yum clean metadata		
+    - yum clean dbcache		
+    - yum makecache		    
+  args:
+    warn: false
+
+- name: Installing ntp
+  yum: 
+    name: ['ntp', 'libselinux-python'] 
+    state: present
+    update_cache: yes
+  tags: ntp
+
+- name: NTP Service configuration step
+  template:
+    src: ntp.conf.j2
+    dest: /etc/ntp.conf
+  tags: ntp
+  notify: restart ntp
+
+- name: Start ntp service
+  service:
+    name: ntpd
+    state: started
+    enabled: yes
+  tags: ntp
+
+- name: Create iptables service file
+  copy:
+    src: iptables
+    dest: /etc/sysconfig/iptables
+    mode: 0600
+
+- name: add mysql iptables rule
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: "{{ mysql_port }}"
+    jump: ACCEPT
+    rule_num: "2"
+  when: group_names | select('search','dbservers') | list | count > 0
+
+- name: add http iptables rule
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: "{{ httpd_port }}"
+    jump: ACCEPT
+    rule_num: "3"
+  when: group_names | select('search','webappservers') | list | count > 0
+
+- name: Save iptables rule
+  shell: "iptables-save > /etc/sysconfig/iptables"
+  changed_when: false
+  notify: restart iptables
+
+- name: Check if SELINUX is running
+  command: getenforce
+  register: sestatus
+  changed_when: false
