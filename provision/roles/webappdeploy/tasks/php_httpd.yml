@@ -1,15 +1,15 @@
 ---
 # These tasks install http and php modules
-#- name: Download Epele repository
-#  get_url:
+- name: Download Epele repository
+  get_url:
 #    url: http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-#    url: https://archives.fedoraproject.org/pub/archive/epel/6/x86_64/epel-release-6-8.noarch.rpm
-#    dest: /tmp
+    url: https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
+    dest: /tmp
 
-#- name: Install epel repository for centos 6
-#  yum:
-#    name: /tmp/epel-release-6-8.noarch.rpm
-#    state: present
+- name: Install epel repository for centos 6
+  yum:
+    name: /tmp/mysql57-community-release-el7-11.noarch.rpm
+    state: present
 
 - name: Install PHP
   command: amazon-linux-extras install -y php7.2
