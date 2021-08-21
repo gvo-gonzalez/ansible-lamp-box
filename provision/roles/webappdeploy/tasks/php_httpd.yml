@@ -1,29 +1,49 @@
 ---
 # These tasks install http and php modules
-- name: Download Epele repository
-  get_url:
+#- name: Download Epele repository
+#  get_url:
 #    url: http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-    url: https://archives.fedoraproject.org/pub/archive/epel/6/x86_64/epel-release-6-8.noarch.rpm
-    dest: /tmp
+#    url: https://archives.fedoraproject.org/pub/archive/epel/6/x86_64/epel-release-6-8.noarch.rpm
+#    dest: /tmp
 
-- name: Install epel repository for centos 6
-  yum:
-    name: /tmp/epel-release-6-8.noarch.rpm
-    state: present
+#- name: Install epel repository for centos 6
+#  yum:
+#    name: /tmp/epel-release-6-8.noarch.rpm
+#    state: present
 
-- name: Installing app required packages
+- name: Install PHP
+  command: amazon-linux-extras install -y php7.2
+  
+#- name: Installing app required packages
+#  yum:
+#    name: [
+#      'httpd', 
+#      'php', 
+#      'php-mysql', 
+#      'git', 
+#      'libsemanage-python', 
+#      'libselinux-python', 
+#      'php-mcrypt', 
+#      'php-curl', 
+#      'php-xml', 
+#      'php-pecl-memcached'
+#    ]
+- name: Install packages required
   yum:
     name: [
-      'httpd', 
-      'php', 
-      'php-mysql', 
-      'git', 
-      'libsemanage-python', 
-      'libselinux-python', 
-      'php-mcrypt', 
-      'php-curl', 
+      'httpd',
+      'php-cli', 
       'php-xml', 
-      'php-pecl-memcached'
+      'php-json', 
+      'php-mbstring', 
+      'php-process', 
+      'php-common', 
+      'php-fpm', 
+      'php-zip', 
+      'php-mysqlnd', 
+      'git',
+      'php-curl',
+      'php-xml'
     ]
     state: present
     update_cache: yes
