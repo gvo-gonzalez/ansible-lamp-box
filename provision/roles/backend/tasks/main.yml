@@ -39,25 +39,6 @@
 - name: Start mysql insecure
   shell: mysqld --skip-grant-tables &
 
-- name: Create Application Database
-  mysql_db:
-    name: "{{ dbname }}"
-    state: present
-
-- name: Create Application DB user
-  mysql_user:
-    name: "{{ dbuser }}"
-    password: "{{ upassword }}"
-    priv: "{{ dbname }}.*:ALL"
-    host: localhost
-    state: present
-
-- name: Import database project
-  mysql_db:
-    state: import
-    name: "{{ dbname }}"
-    target: /var/www/html/simple_lamp.sql
-
 - name: Change mysql root password
   shell:  mysql -uroot mysql -e "update user set authentication_string=password('my_password') where user='root';"
 
@@ -69,4 +50,32 @@
     name: mysqld
     state: started
 
+- name: Create database for WebAPP
+  mysql_db:
+#    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_user: root
+    login_password: "{{ mysql_root_passwd }}"
+    login_host: "127.0.0.1"
+    name: "{{ dbname }}"
+    state: present
+    
+- name: Create Application DB user
+  mysql_user:
+    login_user: "root"
+    login_host: "127.0.0.1"
+    login_password: "{{ mysql_root_passwd }}"
+    name: "{{ dbuser }}"
+    password: "{{ upassword }}"
+    priv: "{{ dbname }}.*:ALL"
+    host: localhost
+    state: present
+
+- name: Import database project
+  mysql_db:
+    login_user: "root"
+    login_host: "127.0.0.1"
+    login_password: "{{ mysql_root_passwd }}"
+    state: import
+    name: "{{ dbname }}"
+    target: /var/www/html/simple_lamp.sql
 
