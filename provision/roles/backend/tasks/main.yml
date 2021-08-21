@@ -40,7 +40,7 @@
   shell: mysqld --skip-grant-tables &
   
 - name: Change mysql root password
-  shell:  mysql -uroot mysql -e "UPDATE user SET Password=PASSWORD('my_password') where USER='root';"
+  shell:  mysql -uroot mysql -e "update user set authentication_string=password('my_password') where user='root';"
 
 - name: Kill mysqld process
   shell: killall -9 mysqld
