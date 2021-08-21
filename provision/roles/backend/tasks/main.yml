@@ -37,7 +37,7 @@
     state: stopped
 
 - name: Start mysql insecure
-  shell: mysqld --skip-grant-tables
+  shell: mysqld --skip-grant-tables &
   
 - name: Change mysql root password
   shell:  mysql -uroot mysql -e "UPDATE user SET Password=PASSWORD('my_password') where USER='root';"
