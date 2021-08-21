@@ -31,24 +31,22 @@
     state: started
     enabled: yes
 
-- name: Create Application Database
-  mysql_db:
-    name: "{{ dbname }}"
-    state: present
+- name: Stop mysql service
+  service:
+    name: mysqld
+    state: stopped
 
-- name: Create Application DB user
-  mysql_user:
-    name: "{{ dbuser }}"
-    password: "{{ upassword }}"
-    priv: "{{ dbname }}.*:ALL"
-    host: localhost
-    state: present
+- name: Start mysql insecure
+  shell: mysqld --skip-grant-tables
+  
+- name: Change mysql root password
+  shell:  mysql -uroot mysql -e "UPDATE user SET Password=PASSWORD('my_password') where USER='root';"
 
-- name: Import database project
-  mysql_db:
-    state: import
-    name: "{{ dbname }}"
-    target: /var/www/html/simple_lamp.sql
+- name: Kill mysqld process
+  shell: killall -9 mysqld
 
-- debug:
-    msg: "Your setup is now available at http://127.0.0.1:8081"
+- name: Start mysql service
+  service:
+    name: mysqld
+    state: started
+    
