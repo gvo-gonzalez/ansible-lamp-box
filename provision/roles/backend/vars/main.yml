@@ -7,3 +7,4 @@ mysql_port: 3306
 dbuser: username
 dbname: simple_lamp
 upassword: password
+mysql_root_passwd: my_password
