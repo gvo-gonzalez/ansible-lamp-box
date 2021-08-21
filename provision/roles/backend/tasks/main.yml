@@ -3,7 +3,7 @@
 - name: Install Mysql packages
   yum:
     name: [
-      'mysql-server', 
+      'mysql-community-server', 
       'MySQL-python', 
       'libselinux-python', 
       'libsemanage-python'
